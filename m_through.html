@@ -52,11 +52,17 @@
   </head>
 
   <script>
-    function radioButtonOnClick(active, inactive) {
-      document.getElementById(active).setAttribute("style", "background-color: #025098; color: #FFF;");
-      document.getElementById(inactive).setAttribute("style", "background-color: #FFF; color: #606266;");
-      document.getElementById("text-" + active).setAttribute("style", "");
-      document.getElementById("text-" + inactive).setAttribute("style", "display: none;");
+    function radioButtonOnClick(active) {
+      let ids = ["cxk-span", "rxk-span", "xntxk-span"];
+      for (let spanId of ids) {
+        if (active === spanId) {
+          document.getElementById(spanId).setAttribute("style", "background-color: #025098; color: #FFF;");
+          document.getElementById("text-" + spanId).setAttribute("style", "");
+        } else {
+          document.getElementById(spanId).setAttribute("style", "background-color: #FFF; color: #606266;");
+          document.getElementById("text-" + spanId).setAttribute("style", "display: none;");
+        }
+      }
     }
   </script>
   
@@ -65,15 +71,21 @@
       <div id="color" class="green">
         <div role="radiogroup" class="el-radio-group radioGroup">
           <label role="radio" aria-checked="true" tabindex="0" class="el-radio-button is-active"
-          onclick="radioButtonOnClick('cxk-span', 'rxk-span')">
+          onclick="radioButtonOnClick('cxk-span')">
             <input type="radio" tabindex="-1" class="el-radio-button__orig-radio" value="cxk">
             <span class="el-radio-button__inner" id="cxk-span">出校码
               <!----></span>
           </label>
           <label role="radio" tabindex="-1" class="el-radio-button"
-          onclick="radioButtonOnClick('rxk-span', 'cxk-span')">
+          onclick="radioButtonOnClick('rxk-span')">
             <input type="radio" tabindex="-1" class="el-radio-button__orig-radio" value="rxk">
             <span class="el-radio-button__inner" id="rxk-span">入校码
+              <!----></span>
+          </label>
+          <label role="radio" tabindex="-1" class="el-radio-button"
+          onclick="radioButtonOnClick('xntxk-span')">
+            <input type="radio" tabindex="-1" class="el-radio-button__orig-radio" value="xntxk">
+            <span class="el-radio-button__inner" id="xntxk-span">校内通行证
               <!----></span>
           </label>
         </div>
@@ -84,6 +96,7 @@
               <img src="v2/static/img/title.33abfbf8.png" alt="" class="heade_title">
               <span id="text-cxk-span">出校码</span>
               <span id="text-rxk-span" style="display: none;">入校码</span>
+              <span id="text-xntxk-span" style="display: none;">校内通行证</span>
             </p>
             <div class="headlth_date">
               <span id="auto-refresh-date">{{ date }}</span>
@@ -92,7 +105,7 @@
           </div>
           <div class="health_portrait">
             <img src="v2/static/img/green_bg.gif" alt="" class="health_portrait_bg">
-            <img src="{{ avatar }}" alt="" class="health_portrait_avatar" id="info-avatar">
+            <img src="" alt="" class="health_portrait_avatar" id="info-avatar">
           </div>
           <div class="health_details">
             <ul>
@@ -126,7 +139,11 @@
             </ul>
             <!---->
           </div>
-          <p class="health_but">允许通行</p>
+          <div class="health_but_l1">
+            <p>核酸: <span id="info-expire">{{ expire }}</span>天</p>
+            <p>健康宝: 状态正常</p>
+          </div>
+          <p class="health_but_l2">允许通行</p></div>
         </div>
         <div class="health_bot">
           <img src="v2/static/img/ditu.e0610782.png" alt="">
@@ -134,7 +151,7 @@
       </div>
   </body>
 
-  <script type="text/javascript">radioButtonOnClick('cxk-span', 'rxk-span');</script>
+  <script type="text/javascript">radioButtonOnClick('cxk-span');</script>
 
   <script type="text/javascript">
   Date.prototype.format = function(fmt) {
@@ -170,14 +187,15 @@
       let hash = window.atob(window.location.hash.slice(1));
       if (hash.startsWith("qbegin=1&") && hash.endsWith("&qend=1")) {
         let decodeFunc = decodeURIComponent;
-        let avatar = getQueryFromString(hash, "avatar", decodeFunc);
-        let name = getQueryFromString(hash, "name", decodeFunc);
-        let gender = getQueryFromString(hash, "gender", decodeFunc);
-        let id = getQueryFromString(hash, "id", decodeFunc);
+        let avatar    = getQueryFromString(hash, "avatar",    decodeFunc);
+        let name      = getQueryFromString(hash, "name",      decodeFunc);
+        let gender    = getQueryFromString(hash, "gender",    decodeFunc);
+        let id        = getQueryFromString(hash, "id",        decodeFunc);
         let affiliate = getQueryFromString(hash, "affiliate", decodeFunc);
         let counselor = getQueryFromString(hash, "counselor", decodeFunc);
-        let phone = getQueryFromString(hash, "phone", decodeFunc);
-        let type = getQueryFromString(hash, "type", decodeFunc);
+        let phone     = getQueryFromString(hash, "phone",     decodeFunc);
+        let type      = getQueryFromString(hash, "type",      decodeFunc);
+        let expire    = getQueryFromString(hash, "expire",    decodeFunc)
         document.getElementById("info-avatar").setAttribute("src", avatar);
         document.getElementById("info-name").innerHTML = name;
         document.getElementById("info-gender").innerHTML = gender;
@@ -185,11 +203,8 @@
         document.getElementById("info-affiliate").innerHTML = affiliate;
         document.getElementById("info-counselor").innerHTML = counselor;
         document.getElementById("info-phone").innerHTML = phone;
-        if (type === "rxk") {
-          radioButtonOnClick('rxk-span', 'cxk-span');
-        } else {
-          radioButtonOnClick('cxk-span', 'rxk-span');
-        }
+        document.getElementById("info-expire").innerHTML = expire;
+        radioButtonOnClick(type + "-span");
       }
     })();
   </script>

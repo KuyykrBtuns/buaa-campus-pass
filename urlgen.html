@@ -19,6 +19,7 @@
         let phone = encodeFunc(document.getElementById("phone").value);
         let avatar = encodeFunc(document.getElementById("avatar").value);
         let type = encodeFunc(document.getElementById("typeck").ck.value);
+        let expire = encodeFunc(document.getElementById("expire").value);
         let url = window.location.href;
         let query = "qbegin=1";
         query += "&name=" + name;
@@ -29,6 +30,7 @@
         query += "&phone=" + phone;
         query += "&avatar=" + avatar;
         query += "&type=" + type;
+        query += "&expire=" + expire;
         query += "&qend=1";
         let hash = window.btoa(query);
         url = url.slice(0, url.lastIndexOf("/") == -1 ? url.length : url.lastIndexOf("/") + 1);
@@ -55,9 +57,11 @@
     <p>辅导员：<input type="text" id="counselor"/></p>
     <p>辅导员电话：<input type="text" id="phone"/></p>
     <p>照片地址：<input type="text" id="avatar" /></p>
-    <p>入校码/出校码：<form id="typeck">
+    <p>核酸天数：<input type="text" id="expire"/></p>
+    <p>入校码/出校码/校园通行证：<form id="typeck">
         <input type="radio" name="ck" value="rxk" checked/>入校码
         <input type="radio" name="ck" value="cxk">出校码
+        <input type="radio" name="ck" value="xntxk">校内通行证
     </form></p>
     <p><button onclick="gen()">生成！</button></p>
     <p style="display: none;" id="instruction">请点击以下链接访问，如需保存，可收藏下一页面</p>
